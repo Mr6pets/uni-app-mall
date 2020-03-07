@@ -13,5 +13,10 @@
 </script>
 
 <style>
-	/*每个页面公共css */
+	/*每个页面公共css 全局引入样式 */
+	@import "/static/iconfont/iconfont.css";
+	page{
+		position: relative;
+		background-color: #FFFFFF;
+	}
 </style>
