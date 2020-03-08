@@ -36,7 +36,9 @@
 		{
 			"path": "pages/goods/goodsList",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh":true,//开启下拉刷新
+				"onReachBottomDistance":0//滑动到底部多少px的时候触发事件。默认是50px;
 			}
 		}
 	],

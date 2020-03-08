@@ -1,12 +1,40 @@
 <template>
-	<view class="header">
-		<view class="target" v-for="(target,index) in filterByList" :key="index" :class="{'on':target.selected}" @tap="handleSelct(index)">
-			{{target.text}}
+	<view>
+		<view class="header">
+			<view class="target" v-for="(target,index) in filterByList" :key="index" :class="{'on':target.selected}" @tap="handleSelct(index)">
+				{{target.text}}
+			</view>
+		</view>	
+		<!-- 占位 -->
+		<view class="place"></view>
+		<!-- 商品列表 -->
+		<view class="goods-list">
+			<view class="product-list">
+				<view class="product" v-for="goods in goodsList" :key="goods.goods_id">
+					<!-- mode="widthFix" 表示宽度不变 -->
+					<image :src="goods.img" mode="widthFix"></image>
+					<view class="name">{{goods.name}}</view>
+					<view class="info">
+						<view class="price">
+							<text>$</text>
+							{{goods.price}}
+						</view>
+						<view class="slogan">
+							{{goods.slogan}}
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="loading-text">
+				{{loadingText}}
+			</view>
 		</view>
+		
 	</view>
 </template>
 
 <script>
+	import interfaces from '../../utils/interfaces.js';
 	export default{
 		data(){
 			return{
@@ -14,16 +42,13 @@
 					{text:'全部',selected:true,filterby:"all"},
 					{text:'口碑',selected:false,filterby:"public"},
 					{text:'热门',selected:false,filterby:"hot"}
-				]
+				],
+				goodsList:[],//所有商品列表存放的地方
+				filterby:"all",//默认选择的tab
+				page:1,//默认请求第一页
+				size:6,//默认请求6组数据
+				loadingText:"正在加载数据...."
 			}	
-		},
-		//页面进入就会执行
-		onLoad(option) {
-			// console.log(option);
-			//动态修改packge.json中navigater title
-			uni.setNavigationBarTitle({
-				title:option.name
-			})
 		},
 		methods:{
 			handleSelct(index){
@@ -33,8 +58,61 @@
 					if(i!=index){
 						this.filterByList[i].selected=false;
 					}
-				}
+				};
+				//点击全部 口碑 热门 分别请求数据
+				this.filterby=this.filterByList[index].filterby;
+				this.page=1;
+				this.loadingText="加载中....";
+				this.goodsList=[];
+				this.loadData();
+			},
+			loadData(){
+				//请求接口示例：https://uniapp-interface.herokuapp.com/api/profiles/goodslist/all/1/6
+				//这里请求的接口需要带值，这个值不是死的，所以 我们需要在data中定义这几个值。请求的类型（fileterby:"all",page:1,size:6）
+				//在URL中进行拼接
+				this.request({
+					url:`${interfaces.getGoodsList}/${this.filterby}/${this.page}/${this.size}`,
+					success:((res)=>{
+						// this.goodsList=res.data;
+						// console.log(this.goodsList);
+						if(res.data.length>0){//如果请求的数据是有值的，那么遍历每个对象放到goodsList这个大的数组中；
+							res.data.forEach(item=>{
+								this.goodsList.push(item);
+							})
+						}else{//如果请求的数据length值都小于0了 那就改动laodingTex的值提示没有数据了或者是到底了
+							this.loadingText="你触碰到我的底线了"
+						}
+						
+					})
+				})
 			}
+		},
+		//页面进入就会执行
+		onLoad(option) {
+			// console.log(option);
+			//动态修改packge.json中navigater title
+			uni.setNavigationBarTitle({
+				title:option.name
+			})
+			//加载数据
+			this.loadData();
+		},
+		//下拉刷新
+		onPullDownRefresh(){
+			// 思路就是重新请求数据
+			setTimeout(()=>{
+				this.page=1;
+				this.loadingText="加载中....";
+				this.goodsList=[];
+				this.loadData();
+				uni.stopPullDownRefresh();
+			},1000)
+		},
+		//上拉加载
+		onReachBottom() {
+			this.page++;
+			this.loadData();
+			
 		}
 	}
 </script>
