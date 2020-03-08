@@ -21,12 +21,57 @@
 			<view class="price">${{goodsInfo.price}}</view>
 			<view class="title">{{goodsInfo.name}}</view>
 		</view>
+		<!-- 选择规格 -->
+		<view class="info-box">
+			<view class="row" @tap="spaceInfo.showSpace=true">
+				<view class="text">选择</view>
+				<view class="content">
+					<view>选择规格:</view>
+					<view class="sp">
+						<view :class="{'on':item == goodsInfo.spec}" v-for="(item , index) in goodsData.spec" :key="index">
+							{{item}}
+						</view>
+					</view>
+				</view>
+				<!-- 箭头 -->
+				<view class="arrow">
+					<view class="icon iconfont">&#xe6a3;</view>
+				</view>
+			</view>
+		</view>
+		<!-- 摸态框 -->
+		<popupSpec :spaceInfo="spaceInfo" :goodsInfo="goodsInfo" :goodsData="goodsData"></popupSpec>
+		<!-- 评价 -->
+		<view class="info-box comments">
+			<view class="row">
+				<view class="text">商品评价({{goodsData.comment.length}})</view>
+				<view class="arrow">
+					<view class="show" @tap="handleRatings">
+						查看全部
+						<view class="icon iconfont">&#xe6a3;</view>
+					</view>
+				</view>
+			</view>
+			<view class="comment" @tap="handleRatings">
+				<view class="user-info">
+					<view class="face">
+						<image :src="goodsData.comment[0].face"></image>
+					</view>
+					<view class="username">{{goodsData.comment[0].username}}</view>
+				</view>
+				<view class="content">
+					{{goodsData.comment[0].content}}
+				</view>
+			</view>
+		</view>
+		
 	</view>
 </template>
 
 <script>
 	import goodsHeader from "./goodsHeader.vue";
-	import interfaces from '../../utils/interfaces.js'
+	import interfaces from '../../utils/interfaces.js';
+	import popupSpec from '../../components/popupSpec.vue'
 	export default{
 		data(){
 			return{
@@ -34,7 +79,9 @@
 				goodsData:{
 					swiperList:[],
 					spec:[],
-					comment:[],
+					comment:[
+						{face:"",content:"",username:""}
+					],
 					descriptionStr:""
 				},
 				goodsInfo:{
@@ -42,11 +89,15 @@
 					price:"",
 					number:1,
 					spec:""
+				},
+				spaceInfo: {
+					showSpace: false
 				}
 			}
 		},
 		components:{
-			goodsHeader
+			goodsHeader,
+			popupSpec
 		},
 		onLoad(option){
 			// console.log(option);
@@ -65,6 +116,15 @@
 			},
 			swiperChange(event){
 				this.currentSwiper=event.detail.current;
+			},
+			//查看所有评价
+			handleRatings(){
+				// 本地存储
+				//uni的本地同步存储uni.setStorageSync(key名，value值)
+				uni.setStorageSync('comments',this.goodsData.comment);
+				uni.navigateTo({
+					url:'./ratings'
+				})
 			}
 		}
 	}
