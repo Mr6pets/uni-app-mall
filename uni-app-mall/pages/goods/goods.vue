@@ -64,7 +64,32 @@
 				</view>
 			</view>
 		</view>
-		
+		<!-- 商品详情 -->
+		<view class="description">
+			<view class="title">————商品详情————</view>
+			<view class="content">
+				<!-- 可以插入元素节点 -->
+				<rich-text :nodes="goodsData.descriptionStr"></rich-text>
+			</view>
+		</view>
+		<!-- 底部菜单 -->
+		<view class="footer">
+			<view class="icons">
+				<view class="box">
+					<view class="icon iconfont">&#xe7e0;</view>
+					<view class="text">分享</view>
+				</view>
+				<view class="box" @tap="keep">
+					<view class="icon iconfont" v-if="isKeep">&#xe64b;</view>
+					<view class="icon iconfont" v-else>&#xe64c;</view>
+					<view class="text">{{isKeep?"已":''}}收藏</view>
+				</view>
+			</view>
+			<view class="btn">
+				<view class="joinCart">加入购物车</view>
+				<view class="buy">立即购买</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -75,6 +100,7 @@
 	export default{
 		data(){
 			return{
+				isKeep:false,//收藏开关
 				currentSwiper:0,//轮播图下标
 				goodsData:{
 					swiperList:[],
@@ -82,7 +108,7 @@
 					comment:[
 						{face:"",content:"",username:""}
 					],
-					descriptionStr:""
+					descriptionStr:"",
 				},
 				goodsInfo:{
 					name:"",
@@ -125,6 +151,20 @@
 				uni.navigateTo({
 					url:'./ratings'
 				})
+			},
+			keep(){
+				this.isKeep=!this.isKeep;
+				if(this.isKeep){
+					uni.showToast({
+						title:"已收藏",
+						icon:"success"
+					})
+				}else{
+					uni.showToast({
+						title:"取消收藏",
+						icon:"success"
+					})
+				}
 			}
 		}
 	}
