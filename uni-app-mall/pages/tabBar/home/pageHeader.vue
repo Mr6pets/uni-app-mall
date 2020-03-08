@@ -1,19 +1,23 @@
 <template>
-	<view class="header">
-		<!-- 定位城市 -->
-		<view class="addr">
-			<view class="icon iconfont">&#xe650;</view> {{city}}
-		</view>
-		<!-- 搜索框 -->
-		<view class="input-box">
-			<input type="text" placeholder="some words..." placeholder-style="color:#c0c0c0" />
-			<view class="icon iconfont">&#xe65c;</view>
-		</view>
+	<view>
+		<view class="header">
+			<!-- 定位城市 -->
+			<view class="addr">
+				<view class="icon iconfont">&#xe650;</view> {{city}}
+			</view>
+			<!-- 搜索框 -->
+			<view class="input-box">
+				<input type="text" placeholder="some words..." placeholder-style="color:#c0c0c0" />
+				<view class="icon iconfont">&#xe65c;</view>
+			</view>
 
-		<!-- 提示信息 -->
-		<view class="icon-btn">
-			<view class="icon iconfont">&#xe70a;</view>
+			<!-- 提示信息 -->
+			<view class="icon-btn">
+				<view class="icon iconfont">&#xe70a;</view>
+			</view>
 		</view>
+		<!-- 占位 -->
+		<view class="place"></view>
 	</view>
 </template>
 

@@ -14,7 +14,11 @@
 		{
 			"path": "pages/tabBar/category/category",
 			"style": {
-				"navigationBarTitleText": "分类"
+				"navigationBarTitleText": "分类",
+				"app-plus":{//去除系统默认的导航栏样式
+					"titleNView":false,
+					"bounce":"none"//没有回弹效果
+				}
 			}
 		},
 		{
@@ -27,6 +31,12 @@
 			"path": "pages/tabBar/user/user",
 			"style": {
 				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/goods/goodsList",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		}
 	],
