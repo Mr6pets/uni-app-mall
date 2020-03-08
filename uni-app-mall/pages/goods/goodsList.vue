@@ -10,7 +10,7 @@
 		<!-- 商品列表 -->
 		<view class="goods-list">
 			<view class="product-list">
-				<view class="product" v-for="goods in goodsList" :key="goods.goods_id">
+				<view class="product" v-for="goods in goodsList" :key="goods.goods_id" @tap="handleGoods(goods)">
 					<!-- mode="widthFix" 表示宽度不变 -->
 					<image :src="goods.img" mode="widthFix"></image>
 					<view class="name">{{goods.name}}</view>
@@ -51,6 +51,12 @@
 			}	
 		},
 		methods:{
+			//点击进入商品详情页
+			handleGoods(goods){
+				uni.navigateTo({
+					url:'./goods?goodsInfo='+JSON.stringify(goods)
+				})
+			},
 			handleSelct(index){
 				this.filterByList[index].selected=true;
 				//其他内容selected为false
