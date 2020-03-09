@@ -172,7 +172,7 @@
 				uni.getStorage({
 					key:"goodsList",
 					success:(res=>{
-						//console.log(res.data);
+						// console.log(res.data);
 						// 如果是拿到的数据
 						let goodsList=res.data;
 						
@@ -182,9 +182,10 @@
 						//这里的遍历的作用是用来判断 你点击购物车的商品是不是同一个东西 如果是同一个东西那就数量累加 如果是同一个商品的id但是不同的规格 那就再次存储
 						goodsList.forEach(goods =>{
 							if(goods.goods_id==this.goodsInfo.goods_id && goods.spec==this.goodsInfo.spec){
-								goods.number+=this.goodsInfo.number;
+								goods.number+=Number(this.goodsInfo.number);
+								isExist=true;
 							}
-							isExist=true;
+							
 						})
 						if(!isExist){
 							goodsList.push(this.goodsInfo);

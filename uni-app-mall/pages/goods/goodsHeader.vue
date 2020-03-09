@@ -7,7 +7,7 @@
 			</view>
 			<view class="middle"></view>
 			<view class="icon-btn">
-				<view class="icon iconfont">&#xe6af;</view>
+				<view @tap="showCart" class="icon iconfont">&#xe6af;</view>
 			</view>
 		</view>
 	</view>
@@ -37,6 +37,11 @@
 			back(){
 				//自带的放回方法
 				uni.navigateBack();
+			},
+			showCart(){//进入购物车
+				uni.switchTab({
+					url:"../tabBar/cart/cart"
+				})
 			}
 		}
 	}
