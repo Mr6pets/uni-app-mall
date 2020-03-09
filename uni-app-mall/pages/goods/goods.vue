@@ -86,7 +86,7 @@
 				</view>
 			</view>
 			<view class="btn">
-				<view class="joinCart">加入购物车</view>
+				<view @tap="joinCart" class="joinCart">加入购物车</view>
 				<view class="buy">立即购买</view>
 			</view>
 		</view>
@@ -102,7 +102,7 @@
 			return{
 				isKeep:false,//收藏开关
 				currentSwiper:0,//轮播图下标
-				goodsData:{
+				goodsData:{//包含轮播图 规格 评论 详情
 					swiperList:[],
 					spec:[],
 					comment:[
@@ -110,7 +110,7 @@
 					],
 					descriptionStr:"",
 				},
-				goodsInfo:{
+				goodsInfo:{//包含名字 价格 数量 规格
 					name:"",
 					price:"",
 					number:1,
@@ -165,6 +165,57 @@
 						icon:"success"
 					})
 				}
+			},
+			joinCart(){//加入购物车
+				//存储到本地
+				//现在本地存储去取
+				uni.getStorage({
+					key:"goodsList",
+					success:(res=>{
+						//console.log(res.data);
+						// 如果是拿到的数据
+						let goodsList=res.data;
+						
+						//定义一个开关 查找商品是够存在
+						let isExist=false;
+						
+						//这里的遍历的作用是用来判断 你点击购物车的商品是不是同一个东西 如果是同一个东西那就数量累加 如果是同一个商品的id但是不同的规格 那就再次存储
+						goodsList.forEach(goods =>{
+							if(goods.goods_id==this.goodsInfo.goods_id && goods.spec==this.goodsInfo.spec){
+								goods.number+=this.goodsInfo.number;
+							}
+							isExist=true;
+						})
+						if(!isExist){
+							goodsList.push(this.goodsInfo);
+							//跟新本地存储
+							this.setGoodsList(goodsList);
+						}
+						
+					}),
+					fail:(err=>{//第一次加入购物车 没有得到数据 所以fail就存储
+					
+						let goodsList=[];
+						//将goodInfo 信息放到定义的空数组里 准备存入本地存储
+						goodsList.push(this.goodsInfo);
+						
+						//本地存储中存储数据
+						this.setGoodsList(goodsList);
+					})
+				})
+			},
+			setGoodsList(goodsList){
+				//往本地存储 存储数据
+				uni.setStorage({
+					key:"goodsList",
+					data:goodsList,
+					success:function(){
+						uni.showToast({
+							icon:"success",
+							title:"添加成功"
+						})
+					}
+				})
 			}
 		}
 	}

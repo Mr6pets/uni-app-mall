@@ -2537,7 +2537,15 @@ var render = function() {
             [
               _c(
                 "v-uni-view",
-                { staticClass: _vm._$g(47, "sc"), attrs: { _i: 47 } },
+                {
+                  staticClass: _vm._$g(47, "sc"),
+                  attrs: { _i: 47 },
+                  on: {
+                    click: function($event) {
+                      return _vm.$handleViewEvent($event)
+                    }
+                  }
+                },
                 [_vm._v("加入购物车")]
               ),
               _c(
