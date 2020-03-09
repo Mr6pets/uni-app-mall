@@ -19,21 +19,24 @@
 		},
 		methods:{
 			sub(){
-				//如果goodsInfo的的number值小于等于1 那就跳出函数
-				if(this.goodsInfo.number<=1){
-					return;
-				}else{
-					this.goodsInfo.number--;
-					
-					// 注册change事件 一旦发生变化也是会触发的
-					this.$emit("change")
-					
-				}
+				// //如果goodsInfo的的number值小于等于1 那就跳出函数
+				// if(this.goodsInfo.number<=1){
+				// 	return;
+				// this.goodsInfo.number--;
+				
+				// 	// 注册change事件 一旦发生变化也是会触发的
+				// 	this.$emit("change")
+				
+				//注册事件传递
+				this.$emit("sub");
 			},
 			add(){
-				this.goodsInfo.number++;
-				// 注册change事件 一旦发生变化也是会触发的
-				this.$emit("change")
+				// this.goodsInfo.number++;
+				// // 注册change事件 一旦发生变化也是会触发的
+				// this.$emit("change")
+				
+				//注册事件传递
+				this.$emit("add");
 			}
 		}
 	}

@@ -40,7 +40,16 @@
 			</view>
 		</view>
 		<!-- 摸态框 -->
-		<popupSpec :spaceInfo="spaceInfo" :goodsInfo="goodsInfo" :goodsData="goodsData"></popupSpec>
+		<popupSpec 
+		:spaceInfo="spaceInfo" 
+		:goodsInfo="goodsInfo" 
+		:goodsData="goodsData" 
+		@setSelectSpec="setSelectSpec" 
+		@hideSpec="hideSpec"
+		@add="add"
+		@sub="sub"
+		>
+		</popupSpec>
 		<!-- 评价 -->
 		<view class="info-box comments">
 			<view class="row">
@@ -131,6 +140,23 @@
 			this.initDate()
 		},
 		methods:{
+			setSelectSpec(item){//popupSpec组件的注册事件
+				// console.log(item);获取到子级传递过来的内容
+				this.goodsInfo.spec=item;
+			},
+			hideSpec(){////popupSpec组件的注册事件
+				this.spaceInfo.showSpace=false;
+			},
+			sub(){
+				//如果goodsInfo的的number值小于等于1 那就跳出函数
+				if(this.goodsInfo.number <= 1){
+					return;
+				}
+				this.goodsInfo.number--;
+			},
+			add(){
+				this.goodsInfo.number++;
+			},
 			initDate(){
 				this.request({
 					url:interfaces.getGoods,

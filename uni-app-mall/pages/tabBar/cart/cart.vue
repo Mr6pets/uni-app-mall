@@ -29,7 +29,7 @@
 							<view class="spec">{{item.spec}}</view>
 							<view class="price-number">
 								<view class="price">￥{{item.price}}</view>
-								<counter :goodsInfo="item" @change="sum"/>
+								<counter :goodsInfo="item" @add="add(item)" @sub="sub(item)"/>
 							</view>
 						</view>
 					</view>
@@ -100,6 +100,17 @@
 			counter
 		},
 		methods:{
+			sub(item){//子组件传递过来的sub方法
+				item.number++;
+				this.sum()
+			},
+			add(item){//子组件传递过来的add方法
+				if(item.number <= 1){
+					return;
+				}
+				item.number--;
+				this.sum();
+			},
 			handleCheckbox(item){// 点击选中或者不选中
 				// console.log(item);
 				item.selected=!item.selected;

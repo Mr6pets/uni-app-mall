@@ -13,7 +13,7 @@
 					<view class="length">
 						<view class="text">数量</view>
 						<!-- 数量的组件 -->
-						<counter :goodsInfo="goodsInfo"/>
+						<counter :goodsInfo="goodsInfo" @sub="sub" @add="add"/>
 					</view>
 				</view>
 				<!-- 确定按钮 -->
@@ -35,11 +35,22 @@
 		methods:{
 			//隐藏模态框
 			hideSpecifications(){
-				this.spaceInfo.showSpace=false;
+				// this.spaceInfo.showSpace=false;
+				this.$emit("hideSpec")
 			},
 			//模态框选择规格
 			handleSelectSpecification(item){
-				this.goodsInfo.spec=item;
+				//组件里不能直接改动父级的数据
+				// this.goodsInfo.spec=item;
+				
+				// 需要通过子级注册事件 父级执行方法 
+				this.$emit("setSelectSpec",item)
+			},
+			sub(){
+				this.$emit("sub")
+			},
+			add(){
+				this.$emit("add")
 			}
 		},
 		components:{
