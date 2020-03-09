@@ -4,7 +4,7 @@
 			<view class="empty" v-show="goodsList.length==0">购物车啥也没有,心里没点逼数吗...</view>
 			<view class="row" v-for="(item,index) in goodsList" :key="index">
 				<!-- 删除按钮 -->
-				<view class="menu" >
+				<view class="menu" @tap="handleSingleDelete(item)">
 					<view class="icon iconfont">&#xe6a6;</view>
 				</view>
 				<!-- 商品 -->
@@ -29,7 +29,7 @@
 							<view class="spec">{{item.spec}}</view>
 							<view class="price-number">
 								<view class="price">￥{{item.price}}</view>
-								<counter :goodsInfo="item"/>
+								<counter :goodsInfo="item" @change="sum"/>
 							</view>
 						</view>
 					</view>
@@ -39,16 +39,17 @@
 		<!-- 底部菜单 -->
 		<view class="footer" :style="{bottom:footerbottom}">
 			<!-- checkbox -->
-			<view class="container">
+			<view class="container" @tap="handleSelectAll">
 				<view class="checkbox">
-					<view></view>
+					<view :class="{'on':isAllSelected}"></view>
 				</view>
+				<view class="text">全选</view>
 			</view>
 			<!-- 其他的操作 -->
-			<view class="delBtn">删除</view>
+			<view class="delBtn" @tap="handleMulDelete" v-if="selectedList.length>0">删除</view>
 			<view class="settlement">
-				<view class="sum">合计：<view class="money">59999</view></view>
-				<view class="btn">结算0</view>
+				<view class="sum">合计：<view class="money">￥{{sumPrice}}</view></view>
+				<view class="btn" @tap="handleConfirm">结算{{selectedList.length}}</view>
 			</view>
 		</view>
 	</view>
@@ -62,7 +63,10 @@
 				goodsList:[],
 				theIndex:null,//控制滑动效果 当前滑动下标
 				oldIndex:null,//上一个左滑下标
-				footerbottom:0//这个用来获取底部tabbear的高度值，解决WAP端的兼容问题
+				footerbottom:0,//这个用来获取底部tabbear的高度值，解决WAP端的兼容问题
+				selectedList:[],//用来存储选中的数据
+				isAllSelected:false,//判断是不是全选状态的开关
+				sumPrice:'0.00'//用来显示核算的总值
 			}
 		},
 		onLoad() {
@@ -83,6 +87,12 @@
 						res.data[i].selected=false;
 					}
 					this.goodsList=res.data;
+					
+					//当获取本地数据的时候，将其他的数据初始化
+					this.selectedList=[];
+					this.isAllSelected=false;
+					this.sumPrice='0.00'
+					
 				})
 			})
 		},
@@ -93,6 +103,78 @@
 			handleCheckbox(item){// 点击选中或者不选中
 				// console.log(item);
 				item.selected=!item.selected;
+				
+				//selectedlist数组中是否包含该元素
+				let isExist=this.selectedList.indexOf(item);
+				if(isExist > -1){//表明已经查到了 删除这个对象
+					this.selectedList.splice(isExist,1)
+				}else{
+					// 将点击的选中的添加到一个selected的数组里
+					this.selectedList.push(item);
+				}
+				
+				//全选状态
+				if(this.selectedList.length==this.goodsList.length){
+					this.isAllSelected=true;
+				}else{
+					this.isAllSelected=false;
+				}
+				
+				this.sum();
+			},
+			handleSelectAll(){//点击底部  --全选
+				this.isAllSelected=!this.isAllSelected;
+				
+				//点击底部全选按钮后 goodList数组的中的数据处理
+				let arr=[];
+				this.goodsList.forEach((item,index)=>{
+					//遍历所有的数据让里面的selected全部变成我们点击后的false 或者是true
+					item.selected=this.isAllSelected;
+					arr.push(item);
+				})
+				// 如果说isAllSelected都是将这个arr数组给selectedList ????
+				this.selectedList= this.isAllSelected ? arr : [];
+				
+				this.sum();
+			},
+			sum(){//核计
+				this.sumPrice=0;
+				this.goodsList.forEach((item,index)=>{
+					//遍历所有的值，选中的价格进行核算
+					if(item.selected){
+						this.sumPrice=this.sumPrice+(item.number*item.price);
+					}
+				})
+				//保留后面2位小数
+				this.sumPrice=this.sumPrice.toFixed(2);
+			},
+			handleSingleDelete(item){//单个删除
+				//更新本地storage
+				uni.getStorage({
+					key:"goodsList",
+					success:(res)=>{
+						//拿到本地数据将传递过来的item这个对象的数据删掉
+						res.data.splice(res.data.indexOf(item),1)
+						// 删除过后也同步再次存储
+						uni.setStorageSync("goodsList",res.data);
+					}
+				})
+				//更新数组
+				this.goodsList.splice(this.goodsList.indexOf(item,1));
+				this.selectedList.splice(this.selectedList.indexOf(item,1));
+				
+				// 删除的时候同时也把滑动的数据重置
+				this.oldIndex=null;
+				this.theIndex=null;
+				//删除过后也是需要合计也需要重新执行
+				this.sum();
+			},
+			handleMulDelete(){//全部删除
+				//循环删除所有选中的商品
+				while(this.selectedList.length>0){
+					//将选中的数组中每一个都走一遍 追个删除选中的列表；
+					this.handleSingleDelete(this.selectedList[0]);
+				}
 			},
 			handleGoodsInfo(item){//点击跳转回详情页
 				uni.navigateTo({
@@ -145,6 +227,25 @@
 			},
 			handleTouchEnd(index,event){
 				
+			},
+			handleConfirm(){//结算
+				if(this.selectedList.length<1){
+					uni.showToast({
+						icon:"none",
+						title:"请选择结算商品"
+					})
+					return;
+				}
+				//本地存储
+				uni.setStorage({
+					key:"comfirmList",
+					data:this.selectedList,
+					success() {
+						uni.navigateTo({
+							url:"../../order/cofirm"
+						})
+					}
+				})
 			}
 		}
 	}

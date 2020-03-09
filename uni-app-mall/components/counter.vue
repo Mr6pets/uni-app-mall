@@ -24,10 +24,16 @@
 					return;
 				}else{
 					this.goodsInfo.number--;
+					
+					// 注册change事件 一旦发生变化也是会触发的
+					this.$emit("change")
+					
 				}
 			},
 			add(){
 				this.goodsInfo.number++;
+				// 注册change事件 一旦发生变化也是会触发的
+				this.$emit("change")
 			}
 		}
 	}

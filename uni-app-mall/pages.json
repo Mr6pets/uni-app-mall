@@ -30,7 +30,11 @@
 		{
 			"path": "pages/tabBar/user/user",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"backgroundTextStyle":"light",
+				"navigationBarBackgroundColor":"#f06c7a",
+				"backgroundColorTop":"#f06c7a",
+				"navigationBarTextStyle":"white"
 			}
 		},
 		{
@@ -59,6 +63,18 @@
 			"path": "pages/goods/ratings",
 			"style": {
 				"navigationBarTitleText": "商品评论"
+			}
+		},
+		{
+			"path": "pages/order/cofirm",
+			"style": {
+				"navigationBarTitleText": "商品结算"
+			}
+		},
+		{
+			"path": "pages/tabBar/user/qrcode",
+			"style": {
+				"navigationBarTitleText": "我的二维码"
 			}
 		}
 	],

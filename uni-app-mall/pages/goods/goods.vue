@@ -87,7 +87,7 @@
 			</view>
 			<view class="btn">
 				<view @tap="joinCart" class="joinCart">加入购物车</view>
-				<view class="buy">立即购买</view>
+				<view class="buy" @tap="handleBuy">立即购买</view>
 			</view>
 		</view>
 	</view>
@@ -214,6 +214,20 @@
 						uni.showToast({
 							icon:"success",
 							title:"添加成功"
+						})
+					}
+				})
+			},
+			handleBuy(){//立即购买
+				//这里存储的是单个的goodsinfo 是个对象 所以 我们要先准备一个空数组
+				let tempList=[];
+				tempList.push(this.goodsInfo);
+				uni.setStorage({
+					key:"confirmList",
+					data:tempList,
+					success:()=>{
+						uni.navigateTo({
+							url:"../order/cofirm"
 						})
 					}
 				})
