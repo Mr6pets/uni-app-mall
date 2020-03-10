@@ -4,11 +4,12 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false
+		"urlCheck": true,
+		"minified": true
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.9.2",
-	"appid": "touristappid",
+	"appid": "wx9c88936c02d892dd",
 	"projectname": "uni-app-mall",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},

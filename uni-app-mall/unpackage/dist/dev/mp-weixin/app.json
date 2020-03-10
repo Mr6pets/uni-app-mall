@@ -5,7 +5,10 @@
     "pages/tabBar/cart/cart",
     "pages/tabBar/user/user",
     "pages/goods/goodsList",
-    "pages/goods/goods"
+    "pages/goods/goods",
+    "pages/goods/ratings",
+    "pages/order/cofirm",
+    "pages/tabBar/user/qrcode"
   ],
   "subPackages": [],
   "window": {
@@ -49,5 +52,5 @@
   "usingComponents": {
     "page-status": "/components/status"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap54.json"
 }
